@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Content Corpus Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Text Content Corpus Tool</h1>
+            <p>Processing books, articles, and text content for LM training corpus</p>
+        </header>
+
+        <main>
+            <section class="metadata-section">
+                <h2>📋 Content Metadata</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="content-title">Title *</label>
+                        <input type="text" id="content-title" required placeholder="Enter content title...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-author">Author *</label>
+                        <input type="text" id="content-author" required placeholder="Enter author name...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-type">Content Type *</label>
+                        <select id="content-type" required>
+                            <option value="">Select content type...</option>
+                            <option value="book">Book</option>
+                            <option value="magazine">Magazine Article</option>
+                            <option value="blog">Blog Post</option>
+                            <option value="article">Article</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-language">Language</label>
+                        <select id="content-language">
+                            <option value="en-US">English (US)</option>
+                            <option value="en-GB">English (UK)</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-publisher">Publisher</label>
+                        <input type="text" id="content-publisher" placeholder="Publisher name (optional)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-isbn">ISBN</label>
+                        <input type="text" id="content-isbn" placeholder="ISBN (optional)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-genre">Genre</label>
+                        <input type="text" id="content-genre" placeholder="Genre (optional)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-chapter">Chapter/Section</label>
+                        <input type="text" id="content-chapter" placeholder="Chapter or section (optional)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-url">Source URL</label>
+                        <input type="url" id="content-url" placeholder="https://example.com (optional)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="training-weight">Training Weight</label>
+                        <select id="training-weight">
+                            <option value="1">1 (Default)</option>
+                            <option value="2">2 (Double importance)</option>
+                            <option value="3">3 (Triple importance)</option>
+                            <option value="4">4 (High importance)</option>
+                            <option value="5">5 (Maximum importance)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📝 Text Content</h2>
+                
+                <div class="form-group full-width">
+                    <label for="content-text">Content Text *</label>
+                    <textarea 
+                        id="content-text" 
+                        placeholder="Paste your clean text content here..."
+                        required
+                    ></textarea>
+                </div>
+                
+                <div class="content-stats">
+                    <span id="char-count">0 characters</span>
+                    <span id="word-count">0 words</span>
+                    <span id="token-estimate">0 tokens</span>
+                </div>
+                
+                <div class="actions">
+                    <button id="preview-btn" onclick="generatePreview()">👀 Preview Document</button>
+                    <button id="clear-btn" onclick="clearForm()">🗑️ Clear Form</button>
+                </div>
+            </section>
+
+            <div id="preview-section" style="display: none;">
+                <h2 style="color: #1976D2; margin-bottom: 20px;">📋 Document Preview</h2>
+                
+                <!-- Content Information Display -->
+                <div class="preview-content">
+                    <h3 style="margin-top: 0; color: #333;">📚 Content Information</h3>
+                    <div class="content-info" id="content-info-display">
+                        <!-- Content info gets populated here by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Schema Preview -->
+                <div class="preview-content">
+                    <h3 style="margin-top: 0; color: #333;">📄 Document Schema</h3>
+                    <div id="schema-content">
+                        <!-- JSON schema gets populated here by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="actions">
+                    <button id="insert-btn" onclick="insertDocument()">
+                        💾 Insert to MongoDB
+                    </button>
+                    
+                    <button id="cancel-btn" onclick="cancelPreview()">
+                        ❌ Cancel Preview
+                    </button>
+                </div>
+            </div>
+
+            <section class="status-section">
+                <div id="status-message"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
