@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://yoursite.com/schemas/text-content-corpus.schema.json",
+  "title": "Text Content Corpus Document",
+  "description": "Schema for text content documents in LM training corpus",
+  "type": "object",
+  "required": [
+    "title",
+    "author",
+    "text",
+    "metaData",
+    "corpusTrainingData"
+  ],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "description": "MongoDB ObjectId as string"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Title of the content"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Author name"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Main text content for training"
+    },
+    "metaData": {
+      "type": "object",
+      "required": [
+        "contentType",
+        "textCreationDate"
+      ],
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "enum": [
+            "book",
+            "magazine",
+            "blog",
+            "article",
+            "other"
+          ],
+          "description": "Type of content"
+        },
+        "publicationDate": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Original publication date"
+        },
+        "publisher": {
+          "type": ["string", "null"],
+          "maxLength": 200,
+          "description": "Publisher name"
+        },
+        "source": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Source URL or reference"
+        },
+        "isbn": {
+          "type": ["string", "null"],
+          "pattern": "^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$",
+          "description": "ISBN number"
+        },
+        "textCreationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when text was added to corpus"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "uniqueItems": true,
+          "maxItems": 20,
+          "description": "Content tags for categorization"
+        }
+      },
+      "additionalProperties": false
+    },
+    "corpusTrainingData": {
+      "type": "object",
+      "required": [
+        "includeInTraining",
+        "trainingWeight",
+        "tokenEstimate",
+        "baseModel",
+        "regiMenuLMVersion"
+      ],
+      "properties": {
+        "includeInTraining": {
+          "type": "boolean",
+          "description": "Whether to include this document in training"
+        },
+        "trainingWeight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Training importance weight (1-5)"
+        },
+        "tokenEstimate": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Estimated token count for training"
+        },
+        "baseModel": {
+          "type": "string",
+          "description": "Base model for training (e.g., 'Gemma3 4B')"
+        },
+        "regiMenuLMVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Version of the RegiMenu LM system (semantic versioning)"
+        },
+        "trainingDate": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Date when training was performed"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "64f7b8e9c123456789abcdef",
+  "title": "The Art of Machine Learning",
+  "author": "Dr. Sarah Chen",
+  "text": "Machine learning represents a fundamental shift in how we approach problem-solving in computer science. Rather than explicitly programming solutions, we design algorithms that can learn patterns from data and make predictions or decisions based on those learned patterns.\n\nNeural networks, inspired by the biological structure of the human brain, consist of interconnected nodes or 'neurons' that process information in layers. Each connection between neurons has an associated weight that determines the strength of the signal passed between them.\n\nThe process of training a neural network involves adjusting these weights through repeated exposure to training data, gradually improving the network's ability to recognize patterns and make accurate predictions on new, unseen data.",
+  "metaData": {
+    "contentType": "book",
+    "publicationDate": "2021-09-02T14:30:15.123Z",
+    "publisher": "Tech Publications Inc.",
+    "source": "https://techpublications.com/ml-book",
+    "isbn": "978-0-123456-78-9",
+    "textCreationDate": "2024-09-02T14:30:15.123Z",
+    "tags": [
+      "machine-learning",
+      "neural-networks",
+      "artificial-intelligence",
+      "technology"
+    ]
+  },
+  "corpusTrainingData": {
+    "includeInTraining": true,
+    "trainingWeight": 3,
+    "tokenEstimate": 190,
+    "baseModel": "Gemma3 4B",
+    "regiMenuLMVersion": "0.1.0",
+    "trainingDate": "2024-09-02T14:30:15.123Z"
+  }
+}
