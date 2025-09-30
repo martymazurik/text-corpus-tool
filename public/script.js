@@ -1,5 +1,64 @@
-
 let currentDocumentData = null;
+
+// ============================================================================
+// TEXT CLEANING FUNCTIONS
+// ============================================================================
+
+/**
+ * Main text cleaning function - automatically preprocesses text for corpus
+ * Call this before creating the document structure
+ */
+function cleanText(text) {
+    if (!text || typeof text !== 'string') {
+        return '';
+    }
+
+    let cleaned = text;
+
+    // 1. Normalize Unicode characters (é → é, smart quotes, etc.)
+    cleaned = cleaned.normalize('NFC');
+
+    // 2. Fix common OCR/PDF errors (double spaces, weird characters)
+    cleaned = cleaned.replace(/['']/g, "'");  // Normalize apostrophes
+    cleaned = cleaned.replace(/[""]/g, '"');   // Normalize quotes
+    cleaned = cleaned.replace(/…/g, '...');    // Normalize ellipsis
+    cleaned = cleaned.replace(/—/g, '--');     // Em dash to double dash
+    cleaned = cleaned.replace(/–/g, '-');      // En dash to single dash
+
+    // 3. Remove page numbers (standalone numbers on their own lines)
+    cleaned = cleaned.replace(/^\s*\d+\s*$/gm, '');
+
+    // 4. Fix hyphenation at line breaks (re-join words split across lines)
+    // "exam-\nple" becomes "example"
+    cleaned = cleaned.replace(/(\w+)-\s*\n\s*(\w+)/g, '$1$2');
+
+    // 5. Remove multiple spaces (but preserve single spaces)
+    cleaned = cleaned.replace(/[^\S\n]+/g, ' ');
+
+    // 6. Fix excessive line breaks (more than 2 becomes 2)
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+
+    // 7. Remove spaces at beginning and end of lines
+    cleaned = cleaned.replace(/^[ \t]+|[ \t]+$/gm, '');
+
+    // 8. Remove citation markers like [1], [2], [3]
+    cleaned = cleaned.replace(/\[\d+\]/g, '');
+
+    // 9. Fix common spacing around punctuation
+    cleaned = cleaned.replace(/\s+([.,!?;:])/g, '$1');  // Remove space before punctuation
+    cleaned = cleaned.replace(/([.,!?;:])\s*([.,!?;:])/g, '$1 $2');  // Ensure space after punctuation
+
+    // 10. Remove URLs (optional - removes http/https links)
+    cleaned = cleaned.replace(/https?:\/\/[^\s]+/g, '');
+
+    // 11. Remove email addresses (optional)
+    cleaned = cleaned.replace(/[\w.-]+@[\w.-]+\.\w+/g, '');
+
+    // 12. Final trim - remove leading/trailing whitespace from entire text
+    cleaned = cleaned.trim();
+
+    return cleaned;
+}
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -88,14 +147,17 @@ function createDocumentStructure() {
     const chapter = document.getElementById('content-chapter').value.trim();
     const sourceUrl = document.getElementById('content-url').value.trim();
     const weight = parseInt(document.getElementById('training-weight').value);
-    const contentText = document.getElementById('content-text').value.trim();
+    const rawContentText = document.getElementById('content-text').value.trim();
+    
+    // *** CLEAN THE TEXT AUTOMATICALLY ***
+    const contentText = cleanText(rawContentText);
     
     const documentId = `text_content_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const currentDate = new Date().toISOString();
     
     return {
         document_id: documentId,
-        content_text: contentText,
+        content_text: contentText,  // Using cleaned text
         attribution: {
             author: author,
             title: title,
@@ -107,7 +169,7 @@ function createDocumentStructure() {
         },
         content_metadata: {
             language: language,
-            topic_category: ["other"], // Could be enhanced with topic detection
+            topic_category: ["other"],
             genre: genre || null,
             chapter_section: chapter || null,
             page_numbers: null
@@ -128,15 +190,15 @@ function createDocumentStructure() {
             original_publication_date: currentDate,
             data_lineage: [
                 {
-                    step: "Manual text input via corpus tool",
+                    step: "Manual text input via corpus tool (auto-cleaned)",
                     timestamp: currentDate,
                     tool_used: "text-corpus-tool v1.0"
                 }
             ]
         },
         training_metadata: {
-            token_count: Math.ceil(contentText.length / 4),
-            character_count: contentText.length,
+            token_count: Math.ceil(contentText.length / 4),  // Using cleaned text length
+            character_count: contentText.length,  // Using cleaned text length
             processing_status: "ready_for_training",
             weighting: weight
         },
@@ -163,7 +225,7 @@ function generatePreview() {
     try {
         currentDocumentData = createDocumentStructure();
         showPreview(currentDocumentData);
-        showStatus('Preview generated successfully!', 'success');
+        showStatus('Preview generated successfully! (Text automatically cleaned)', 'success');
         
     } catch (error) {
         showStatus('Error generating preview: ' + error.message, 'error');

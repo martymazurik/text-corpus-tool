@@ -47,6 +47,7 @@
             "magazine",
             "blog",
             "article",
+            "audio",
             "other"
           ],
           "description": "Type of content"
